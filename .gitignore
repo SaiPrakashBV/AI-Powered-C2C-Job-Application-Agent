@@ -1,0 +1,27 @@
+# Build output
+backend/target/
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+*.log
+
+# Local configuration and secrets — never commit
+.env
+backend/application-local.yml
+application-local.yml
+*.p12
+*.jks
+client_secret*.json
+credentials*.json
+
+# Runtime data (resumes, emails, backups live in the configurable data directory, outside the repo)
+data/
+run/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.DS_Store
+*.tsbuildinfo
