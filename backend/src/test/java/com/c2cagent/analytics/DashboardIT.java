@@ -18,10 +18,11 @@ class DashboardIT extends IntegrationTestBase {
                 .andExpect(jsonPath("$.safety.automationMode").value("MANUAL_APPROVAL"))
                 .andExpect(jsonPath("$.safety.outboundDryRun").value(true))
                 .andExpect(jsonPath("$.system.database").value("UP"))
-                .andExpect(jsonPath("$.system.schemaVersion").value("1"))
+                .andExpect(jsonPath("$.system.schemaVersion").value("2"))
                 .andExpect(jsonPath("$.jobCounts.QUEUED").value(0))
                 .andExpect(jsonPath("$.recentActivity[0].eventType").value("SETUP_COMPLETED"))
-                .andExpect(jsonPath("$.modules[?(@.key=='gmail')].availability").value("PLANNED"));
+                .andExpect(jsonPath("$.modules[?(@.key=='gmail')].availability").value("AVAILABLE"))
+                .andExpect(jsonPath("$.modules[?(@.key=='profiles')].availability").value("PLANNED"));
     }
 
     @Test
@@ -29,7 +30,7 @@ class DashboardIT extends IntegrationTestBase {
         AppUser owner = createOwner("owner");
         mvc.perform(get("/api/v1/diagnostics").with(as(owner))).andExpect(status().isOk())
                 .andExpect(jsonPath("$.dataDirectoryWritable").value(true))
-                .andExpect(jsonPath("$.schemaVersion").value("1"));
+                .andExpect(jsonPath("$.schemaVersion").value("2"));
     }
 
     @Test

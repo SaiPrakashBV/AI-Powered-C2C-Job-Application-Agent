@@ -66,6 +66,16 @@ app:
     max-backoff: PT30M
     stale-lock-timeout: PT30M
 
+  gmail:
+    # Google Cloud OAuth client of type "Desktop app" (see GMAIL_OAUTH_SETUP.md). Never commit the JSON file.
+    client-config-file: ${C2C_GMAIL_CLIENT_FILE:}
+    client-id: ${C2C_GMAIL_CLIENT_ID:}
+    client-secret: ${C2C_GMAIL_CLIENT_SECRET:}
+    max-messages-per-sync: 2000
+  email:
+    max-attachment-bytes: 10485760
+    max-text-chars: 500000
+
 logging:
   file:
     name: ${app.data-dir}/logs/c2c-agent.log

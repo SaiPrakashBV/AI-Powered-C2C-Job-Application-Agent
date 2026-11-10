@@ -55,7 +55,7 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionFixation(sf -> sf.changeSessionId()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/auth/setup-status", "/api/v1/auth/setup", "/api/v1/auth/login",
-                        "/api/v1/auth/csrf", "/api/v1/auth/logout").permitAll()
+                        "/api/v1/auth/csrf", "/api/v1/auth/logout", "/api/v1/gmail/oauth/callback").permitAll()
                 .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .requestMatchers("/actuator/**").denyAll()

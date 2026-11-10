@@ -11,11 +11,12 @@ public final class SettingsDtos {
 
     public record SettingsResponse(AutomationMode automationMode, boolean emergencyStop, boolean outboundDryRun,
                                    int sessionTimeoutMinutes, int gmailPollingIntervalMinutes,
-                                   boolean externalAiConsent, String theme, long version, Instant updatedAt) {
+                                   boolean externalAiConsent, String theme, boolean sourceDiscoveryMode,
+                                   int gmailBackfillDays, long version, Instant updatedAt) {
         static SettingsResponse from(WorkspaceSettings s) {
             return new SettingsResponse(s.getAutomationMode(), s.isEmergencyStop(), s.isOutboundDryRun(),
                     s.getSessionTimeoutMinutes(), s.getGmailPollingIntervalMinutes(), s.isExternalAiConsent(),
-                    s.getTheme(), s.getVersion() == null ? 0 : s.getVersion(), s.getUpdatedAt());
+                    s.getTheme(), s.isSourceDiscoveryMode(), s.getGmailBackfillDays(), s.getVersion() == null ? 0 : s.getVersion(), s.getUpdatedAt());
         }
     }
 
@@ -24,7 +25,9 @@ public final class SettingsDtos {
             @NotNull @Min(5) @Max(1440) Integer sessionTimeoutMinutes,
             @NotNull @Min(1) @Max(1440) Integer gmailPollingIntervalMinutes,
             @NotNull Boolean externalAiConsent,
-            @NotNull @Pattern(regexp = "system|light|dark") String theme) {}
+            @NotNull @Pattern(regexp = "system|light|dark") String theme,
+            Boolean sourceDiscoveryMode,              // optional: null = unchanged
+            @Min(1) @Max(365) Integer gmailBackfillDays) {}
 
     public record EmergencyStopRequest(@NotNull Boolean engaged, String reason) {}
 }
