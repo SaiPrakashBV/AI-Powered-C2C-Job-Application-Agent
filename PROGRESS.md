@@ -2,7 +2,7 @@
 
 **Current state:** Phase 2 (Gmail Integration) complete; verified against stubs/fakes in the Linux cloud session.
 **Next:** Phase 3 — Classification & Extraction (start only when the owner says so).
-**Branch:** `claude/phase-1-foundation` (Phases 1–2; not yet merged to `main`).
+**Branch:** `claude/phase-2-gmail` (Phase 2, based on `main` after PR #1 merged Phase 1). Each later phase gets its own branch from `main`.
 
 ## Phase status
 | Phase | Scope | Status |
