@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.0] — 2026-11-10 — Phase 2: Gmail integration
+### Added
+- Gmail OAuth 2.0 desktop flow (PKCE S256, loopback redirect, single-use state, loopback-only return address);
+  connect, reconnect, disconnect (revokes at Google), pause/resume sync, multiple accounts.
+- AES-256-GCM encryption of OAuth tokens with a key file in the data directory.
+- Durable `GMAIL_SYNC` job: initial backfill (configurable days), incremental `history.list`, expired-checkpoint
+  re-scan, pagination, retry/backoff, `REAUTH_REQUIRED` on revoked access, idempotent per-message storage,
+  own-sent exclusion, polling scheduler (configurable interval).
+- MIME parsing (Jakarta Mail): multipart, QP/Base64, charsets, sanitized HTML + text, forwarded messages,
+  size/part/depth limits, safe filenames; PDF/DOCX/TXT attachment text extraction with explicit
+  NEEDS_REVIEW/FAILED/TOO_LARGE statuses; attachments stored under the data directory.
+- Email source rules: approved/blocked addresses and domains, trusted forwarders, Gmail labels, per-account scope,
+  priority, enable/disable, documented precedence, import/export (JSON), "test a sender", discovery mode.
+- Screens: Gmail Accounts, Source & Vendor Rules, Inbox (synced mail with source decisions; classification in P3).
+- Migration V2; GMAIL_OAUTH_SETUP.md.
+
 ## [0.1.0] — 2026-11-10 — Phase 1: Project foundation
 ### Added
 - Spring Boot 4.1 backend: first-time setup, login/lockout, logout/lock, CSRF, CSP, workspace ownership, settings

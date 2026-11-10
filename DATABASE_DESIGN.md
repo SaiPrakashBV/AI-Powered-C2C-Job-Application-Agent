@@ -22,19 +22,21 @@ schema (`ddl-auto: validate`). Tables are created in the phase that implements t
 | `audit_event` | Append-only audit trail (`actor_type` USER/SYSTEM/ANONYMOUS, `event_type`, entity ref, `summary`, `details jsonb` — never secrets/content) | index (`workspace_id`, `created_at desc`) |
 | `background_job` | Durable queue: `job_type`, `status`, `payload jsonb`, `dedup_key`, `attempts`/`max_attempts`, `run_after`, lock owner/time, `last_error`, `failure_kind` | partial unique (`job_type`,`dedup_key`) WHERE status IN (QUEUED,RUNNING) → idempotent enqueue; index (`status`,`run_after`) |
 
+## Implemented — V2 (Phase 2)
+| Table | Purpose | Key constraints |
+|---|---|---|
+| `workspace_settings` (+cols) | `source_discovery_mode` (default false), `gmail_backfill_days` (default 14) | CHECK 1–365 |
+| `gmail_account` | Mailbox: status (CONNECTED/REAUTH_REQUIRED/DISCONNECTED/ERROR), granted scopes, **encrypted** refresh/access tokens, sync flags, last sync result | unique (`workspace_id`, `lower(email_address)`) |
+| `gmail_sync_checkpoint` | 1:1 per account: `history_id`, backfill window/completion, last incremental, messages synced | PK = account id, cascade delete |
+| `incoming_email` | Original message: Gmail ids, labels, headers (subject **nullable**), text body, sanitized HTML + its text, snippet, `is_own_sent`, `source_decision` + rule id + explanation, `processing_status`, parse warnings | **unique (`gmail_account_id`, `gmail_message_id`)**; indexes by workspace/date, thread, status |
+| `email_attachment` | Original + safe filename, MIME, size, SHA-256, storage path (relative to `<data-dir>/attachments`), `extraction_status` (EXTRACTED/UNSUPPORTED/TOO_LARGE/FAILED/NEEDS_REVIEW), extracted text, error | FK cascade from email |
+| `email_source_rule` | Rule type (ALLOW/BLOCK ADDRESS/DOMAIN/LABEL, TRUSTED_FORWARDER), normalized value, optional Gmail account scope, `profile_id` (FK added in Phase 4), priority, enabled, note | unique (workspace, type, value, account, profile) |
+
+Bodies and attachment files are stored only for messages that continue to classification (ALLOWED/DISCOVERY);
+excluded messages keep headers + snippet only.
+
 ## Planned tables (entity → table, phase)
-**Gmail & email (P2–3)**
-- `gmail_account` — workspace, email address, google subject id, status (CONNECTED/REAUTH_REQUIRED/DISCONNECTED),
-  scopes, encrypted refresh token (+ key id), last sync. Unique (`workspace_id`, `google_sub`).
-- `gmail_sync_checkpoint` — account, `history_id`, backfill window, last full sync, error state. 1:1 with account.
-- `incoming_email` — account, `gmail_message_id`, `thread_id`, `history_id`, internal date, headers (from, reply-to,
-  to, cc, subject nullable, message-id, in-reply-to, references), raw size, `text_body`, `sanitized_html`,
-  `is_own_sent`, `processing_status`. **Unique (`gmail_account_id`, `gmail_message_id`)** → idempotent sync.
-- `email_attachment` — email, filename (sanitized), MIME, size, sha256, storage path, `extraction_status`
-  (EXTRACTED/UNSUPPORTED/FAILED/NEEDS_REVIEW), extracted text, error.
-- `email_source_rule` — scope (GLOBAL/ACCOUNT/PROFILE), type (ALLOW_ADDRESS, ALLOW_DOMAIN, BLOCK_ADDRESS,
-  BLOCK_DOMAIN, TRUSTED_FORWARDER, LABEL), value (normalized lower-case), priority, enabled. Precedence documented
-  and tested: explicit address rules > domain rules; block > allow at equal specificity; priority breaks ties.
+**Classification (P3)**
 - `email_classification` — email, category (10 values), secondary intents (jsonb), confidence, evidence (jsonb),
   explanation, classifier (RULES/AI), rule_version, ai_execution_id, `is_current`, `corrected_by_user`.
 
@@ -83,6 +85,6 @@ schema (`ddl-auto: validate`). Tables are created in the phase that implements t
 - `automation_policy` (versioned, explicit activation) and `automation_decision` (per draft: allowed/blocked + reasons).
 
 ## Uniqueness guarantees (spec §7)
-Mailbox: (`workspace_id`, `google_sub`). Message: (`gmail_account_id`, `gmail_message_id`). Requirement:
+Mailbox: (`workspace_id`, `lower(email_address)`). Message: (`gmail_account_id`, `gmail_message_id`). Requirement:
 (`incoming_email_id`, `jd_index`). Resume version: (`resume_id`, `version_no`). Application: one per requirement
 per workspace by default. Send attempts carry an idempotency key unique per draft.
