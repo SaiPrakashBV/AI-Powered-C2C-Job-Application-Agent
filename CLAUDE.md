@@ -37,7 +37,9 @@ browser handoff, drafts vendor emails, and sends **only after manual approval** 
 | `scheduling` | BackgroundJob queue, JobHandler extension point, JobWorker | done |
 | `analytics` | Dashboard summary, ModuleCatalog (honest per-module availability) | done (foundation) |
 | `diagnostics` | Diagnostics endpoint, self-test job | done |
-| `gmail`, `email`, `extraction`, `classification`, `vendors`, `jobs`, `profiles`, `relevance`, `eligibility`, `duplicates`, `resumes`, `masterprofile`, `ats`, `ai`, `tailoring`, `documents`, `templates`, `applications`, `approvals`, `automation`, `feedback` | see MASTER_SPEC §4 | planned (phases 2–9) |
+| `gmail` | OAuth (PKCE loopback), GmailAccount, checkpoints, `MailboxClient` (REST impl), GMAIL_SYNC job + scheduler | done (Phase 2) |
+| `email` | IncomingEmail/attachments, `MimeEmailParser`, `AttachmentTextExtractor`, `SourceRuleEngine` (+ CRUD/import/export), ingestion, inbox API | done (Phase 2) |
+| `extraction`, `classification`, `vendors`, `jobs`, `profiles`, `relevance`, `eligibility`, `duplicates`, `resumes`, `masterprofile`, `ats`, `ai`, `tailoring`, `documents`, `templates`, `applications`, `approvals`, `automation`, `feedback` | see MASTER_SPEC §4 | planned (phases 2–9) |
 
 Within a module: `XController` (REST, DTOs only), `XService` (transactions, rules), `XRepository`, entities,
 `XDtos` (records with Jakarta Validation), interfaces for replaceable strategies. Never return entities from APIs.
@@ -65,7 +67,11 @@ Linux/macOS shell equivalents in parentheses.
 - E2E: start the app against a **fresh** DB, then `npx playwright test --trace off`
   (cloud sessions: `PW_CHROMIUM_PATH=/opt/pw-browsers/chromium`).
 - Windows: `scripts\setup.ps1`, `Start-C2CAgent.cmd`, `scripts\stop.ps1`, `scripts\status.ps1`, `scripts\test.ps1`.
-- Cloud-session DB recipe: `pg_ctlcluster 16 main start`, create role `c2c` and DBs `c2c_agent`, `c2c_agent_test`.
+- Cloud-session DB recipe: `pg_ctlcluster 16 main start`, create role `c2c` (password `c2c_dev_password`) and DBs
+  `c2c_agent`, `c2c_agent_test`, then **export** `C2C_TEST_DB_URL=jdbc:postgresql://localhost:5432/c2c_agent_test`,
+  `C2C_TEST_DB_USER=c2c`, `C2C_TEST_DB_PASSWORD=c2c_dev_password` in the same shell command as `mvn test`
+  (otherwise Testcontainers is tried and fails without Docker). If you edit an *unreleased* migration, drop/recreate
+  the test DB. External Google hosts are not reachable from cloud sessions; Gmail is tested via stubs/fakes.
 
 ## Environment requirements
 Java 21+, Node 20+ (build only), PostgreSQL 16 (Docker Compose or manual), Windows 10/11 for production use.
@@ -101,6 +107,10 @@ Local AI (Ollama) optional; do not assume a GPU.
   mutating history so past decisions stay explainable. Update RESUME_SCORING.md and add regression fixtures.
 - **New classification category:** add to the enum + DB CHECK via a new migration, add patterns to the configurable
   dictionary, add fixtures + precision/recall test update, and decide pipeline routing explicitly.
+- **Unusual email formats:** add an anonymized `.eml`-style fixture via `fixtures/TestEmails` builder and a test in
+  `MimeEmailParserTest`; parsing limits live in `app.email.*`. Sender filtering changes are rules (data), not code.
+- **New mailbox provider / demo mailbox:** implement `gmail.MailboxClient` + `MailboxClientFactory` (tests use
+  `fixtures/FakeMailbox`, OAuth/REST tests use `fixtures/StubGoogleServer`).
 - **New background task:** implement `scheduling.JobHandler` (idempotent!), throw `JobFailure.transientFailure`
   or `JobFailure.permanent`, enqueue with a `dedupKey` for idempotency.
 - **New module/screen:** package under `com.c2cagent.<module>`, migration, DTOs, controller under `/api/v1/...`,

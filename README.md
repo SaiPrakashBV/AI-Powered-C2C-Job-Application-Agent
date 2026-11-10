@@ -5,8 +5,9 @@ real new requirements (even without a subject), checks them against your job sea
 Java Developer), picks or tailors the best resume with explainable scoring, drafts a vendor email, and sends it
 only after **your approval**.
 
-> **Status:** Phase 1 of 10 (foundation) is complete: login, dashboard, settings, safety controls, background
-> jobs, Windows scripts. Gmail and the job pipeline arrive in later phases — see [PROGRESS.md](PROGRESS.md).
+> **Status:** Phases 1–2 of 10 are complete: login, dashboard, settings, safety controls, background jobs, Windows
+> scripts, Gmail connection (OAuth) + background sync, attachment parsing and sender/domain rules. Email
+> classification and the job pipeline arrive in later phases — see [PROGRESS.md](PROGRESS.md).
 
 ## Quick start (Windows 10/11)
 Prerequisites: Java 21 (e.g. Eclipse Temurin 21), Node.js 20+ (build only), Docker Desktop (or a manually
@@ -31,6 +32,7 @@ account the first time. Stop the app with `Stop-C2CAgent.cmd`, and check it with
 ## Documentation
 - [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md): the full product specification
 - [REQUIREMENTS.md](REQUIREMENTS.md): requirement IDs and status
+- [GMAIL_OAUTH_SETUP.md](GMAIL_OAUTH_SETUP.md): connecting Gmail (Google Cloud OAuth client)
 - [ARCHITECTURE.md](ARCHITECTURE.md), [DATABASE_DESIGN.md](DATABASE_DESIGN.md)
 - [PROGRESS.md](PROGRESS.md), [CHANGELOG.md](CHANGELOG.md)
 - [CLAUDE.md](CLAUDE.md): guidance for Claude Code sessions

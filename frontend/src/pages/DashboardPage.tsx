@@ -84,7 +84,7 @@ export function DashboardPage() {
             return (
               <li key={m.key} className="flex items-center justify-between rounded-md px-3 py-2 ring-1 ring-slate-200 dark:ring-slate-800">
                 {nav ? <Link to={nav.path} className="text-sm hover:underline">{m.name}</Link> : <span className="text-sm">{m.name}</span>}
-                {m.availability === 'AVAILABLE' ? <Badge tone="green">Available</Badge> : <Badge>Phase {m.phase}</Badge>}
+                {m.availability === 'AVAILABLE' ? <Badge tone="green">Available</Badge> : m.availability === 'PARTIAL' ? <Badge tone="amber">Partial · completes in Phase {m.phase}</Badge> : <Badge>Phase {m.phase}</Badge>}
               </li>
             );
           })}

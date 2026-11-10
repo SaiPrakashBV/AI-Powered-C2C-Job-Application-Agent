@@ -41,7 +41,7 @@ export function Layout() {
                       }
                     >
                       <span>{item.label}</span>
-                      {item.phase > 1 && <span className="text-[10px] text-slate-400">P{item.phase}</span>}
+                      {item.phase > 2 && <span className="text-[10px] text-slate-400">P{item.phase}</span>}
                     </NavLink>
                   </li>
                 ))}

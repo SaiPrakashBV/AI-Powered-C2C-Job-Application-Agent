@@ -29,5 +29,11 @@ for deterministic execution.
 - Every fixed real-world bug gets a regression test named after the scenario (see CLAUDE.md).
 - Spec §13 scenarios are tracked in REQUIREMENTS.md (X-8) as they are implemented.
 
-## Current results (Phase 1)
-Backend 21/21, frontend 5/5, E2E 2/2 (see PROGRESS.md for the environment).
+## Test doubles for external services
+- `fixtures/FakeMailbox`: in-memory `MailboxClient` (pagination, history pages, failures, expired history).
+- `fixtures/StubGoogleServer`: JDK HttpServer standing in for Google's token endpoint and the Gmail REST API.
+- `fixtures/TestEmails`: builds anonymized MIME messages (no subject, HTML-only, QP/Latin-1, PDF/DOCX attachments,
+  forwarded message/rfc822, malformed and oversized attachments).
+
+## Current results (Phase 2)
+Backend 62/62, frontend 9/9, E2E 3/3 (see PROGRESS.md for the environment).
