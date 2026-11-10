@@ -24,3 +24,4 @@ run/
 .vscode/
 *.iml
 .DS_Store
+*.tsbuildinfo
