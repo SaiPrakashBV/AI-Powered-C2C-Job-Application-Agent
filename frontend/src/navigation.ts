@@ -1,3 +1,7 @@
+/**
+ * `phase` = phase in which the screen became usable (1 = no phase tag shown). Inbox shows synced mail since
+ * Phase 2; its classification review arrives in Phase 3.
+ */
 /** Sidebar entries for all 20 screens in the spec. `moduleKey` links to the backend ModuleCatalog availability. */
 export interface NavItem { path: string; label: string; moduleKey: string; phase: number }
 
@@ -12,9 +16,9 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   {
     title: 'Inbox',
     items: [
-      { path: '/gmail', label: 'Gmail Accounts', moduleKey: 'gmail', phase: 2 },
-      { path: '/inbox', label: 'Inbox & Classification', moduleKey: 'inbox', phase: 3 },
-      { path: '/source-rules', label: 'Source & Vendor Rules', moduleKey: 'source-rules', phase: 2 },
+      { path: '/gmail', label: 'Gmail Accounts', moduleKey: 'gmail', phase: 1 },
+      { path: '/inbox', label: 'Inbox & Classification', moduleKey: 'inbox', phase: 2 },
+      { path: '/source-rules', label: 'Source & Vendor Rules', moduleKey: 'source-rules', phase: 1 },
       { path: '/jobs', label: 'Extracted Jobs', moduleKey: 'jobs', phase: 3 },
     ],
   },

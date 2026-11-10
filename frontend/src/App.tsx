@@ -3,6 +3,9 @@ import { useMe, useSetupStatus } from './auth/useAuth';
 import { Layout } from './components/Layout';
 import { Alert, Spinner } from './components/ui';
 import { DashboardPage } from './pages/DashboardPage';
+import { GmailPage } from './pages/GmailPage';
+import { InboxPage } from './pages/InboxPage';
+import { SourceRulesPage } from './pages/SourceRulesPage';
 import { LoginPage } from './pages/LoginPage';
 import { PlannedPage } from './pages/PlannedPage';
 import { SettingsPage } from './pages/SettingsPage';
@@ -43,6 +46,9 @@ export function App() {
       <Route element={<Layout />}>
         <Route index element={<DashboardPage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="gmail" element={<GmailPage />} />
+        <Route path="source-rules" element={<SourceRulesPage />} />
+        <Route path="inbox" element={<InboxPage />} />
         <Route path="login" element={<Navigate to="/" replace />} />
         <Route path="*" element={<PlannedPage />} />
       </Route>

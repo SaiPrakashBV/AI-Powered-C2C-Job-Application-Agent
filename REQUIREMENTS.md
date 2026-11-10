@@ -6,9 +6,9 @@ stable IDs so code, tests and PROGRESS.md can reference requirements. Status: �
 ## Owner clarifications (C-*)
 | ID | Requirement | Status |
 |---|---|---|
-| C-1 | Gmail is the source of job requirements (~50–100 emails/day); no job-board scraping | ⬜ P2–3 |
+| C-1 | Gmail is the source of job requirements (~50–100 emails/day); no job-board scraping | 🟡 P2 sync done; classification P3 |
 | C-2 | Windows, Java 21, Spring Boot, React+TS, PostgreSQL, simple Windows launcher | 🟡 P1 (launcher written, not yet run on Windows) |
-| C-3 | Gmail OAuth, multiple sender addresses/domains, content-based classification, no-subject emails | ⬜ P2–3 |
+| C-3 | Gmail OAuth, multiple sender addresses/domains, content-based classification, no-subject emails | 🟡 OAuth + rules + no-subject storage done (stub-tested); classification P3 |
 | C-4 | Configurable Job Search Profiles; default Senior Java; reject JS-only/React-only/.NET | ⬜ P4 |
 | C-5 | Multiple resumes, verified master profile, explainable ATS, tailoring below threshold | ⬜ P5–7 |
 | C-6 | Claude / OpenAI / Ollama adapters; manual browser handoff; no unsupported automation | ⬜ P6 |
@@ -21,10 +21,10 @@ stable IDs so code, tests and PROGRESS.md can reference requirements. Status: �
 | ID | Module | Phase | Status |
 |---|---|---|---|
 | M-1 | Authentication & user management | 1 | ✅ setup, hashing, sessions, logout/lock, configurable timeout, lockout, ownership |
-| M-2 | Gmail account integration (OAuth PKCE loopback, sync, checkpoints) | 2 | ⬜ |
-| M-3 | Email source rules & vendor filters (explicit precedence) | 2 | ⬜ |
+| M-2 | Gmail account integration (OAuth PKCE loopback, sync, checkpoints) | 2 | 🟡 implemented + tested against stubs/fakes; **not yet run against real Google** |
+| M-3 | Email source rules & vendor filters (explicit precedence) | 2 | ✅ (profile-specific rules applied in P4) |
 | M-4 | Content-first classification (10 categories, multi-intent, review queue) | 3 | ⬜ |
-| M-5 | MIME content & attachment extraction (limits, safe parsing) | 2–3 | ⬜ |
+| M-5 | MIME content & attachment extraction (limits, safe parsing) | 2 | ✅ (OCR not supported → NEEDS_REVIEW) |
 | M-6 | JD & vendor extraction (field confidence, evidence, editable) | 3 | ⬜ |
 | M-7 | Job search profiles (multiple, AI-suggested from resume, user-approved) | 4 | ⬜ |
 | M-8 | Relevance engine (40/25/20/10/5, Core Technology Gate, 50/70 thresholds) | 4 | ⬜ |
@@ -52,6 +52,6 @@ stable IDs so code, tests and PROGRESS.md can reference requirements. Status: �
 | X-5 | Windows scripts & launcher §10 | 🟡 written; not yet executed on Windows |
 | X-6 | Security §11 | 🟡 auth, CSRF, CSP, loopback bind, audit, no secrets in repo |
 | X-7 | Reliability §12 | 🟡 queue, backoff, dead-letter, recovery, graceful shutdown |
-| X-8 | Test scenarios 1–60 §13 | ⬜ (54/55 partially: unauthorized access + cross-workspace isolation tested) |
+| X-8 | Test scenarios 1–60 §13 | 🟡 parsing/storage parts of 1, 4, 5, 7, 15, 16, 17; 45, 54, 55, 60 tested |
 | X-9 | Documentation set §14 | 🟡 see PROGRESS.md |
 | X-10 | Acceptance criteria §17 (1–30) | 2 (login) verified; 1 (Windows launch) pending owner test |

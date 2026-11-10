@@ -14,7 +14,8 @@ public record AppProperties(
         @DefaultValue("${user.home}/C2CAgent/data") Path dataDir,
         @DefaultValue("false") boolean demoMode,
         @DefaultValue Security security,
-        @DefaultValue Jobs jobs) {
+        @DefaultValue Jobs jobs,
+        @DefaultValue Email email) {
 
     public record Security(
             @DefaultValue("5") int maxFailedLogins,
@@ -27,4 +28,12 @@ public record AppProperties(
             @DefaultValue("PT10S") Duration baseBackoff,
             @DefaultValue("PT30M") Duration maxBackoff,
             @DefaultValue("PT30M") Duration staleLockTimeout) {}
+
+    /** Safety limits for parsing untrusted email content. */
+    public record Email(
+            @DefaultValue("10485760") int maxAttachmentBytes,
+            @DefaultValue("500000") int maxTextChars,
+            @DefaultValue("200") int maxMimeParts,
+            @DefaultValue("8") int maxMimeDepth,
+            @DefaultValue("5000") int maxPdfPages) {}
 }
