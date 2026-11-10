@@ -1,6 +1,7 @@
 package com.c2cagent.analytics;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,7 +33,10 @@ class DashboardIT extends IntegrationTestBase {
     }
 
     @Test
-    void spaRoutesForwardToIndex() throws Exception {
-        mvc.perform(get("/resumes")).andExpect(status().isOk());
+    void spaRoutesForwardToIndexButStaticAssetsAndApisDoNot() throws Exception {
+        mvc.perform(get("/resumes")).andExpect(forwardedUrl("/index.html"));
+        mvc.perform(get("/jobs/123/history")).andExpect(forwardedUrl("/index.html"));
+        mvc.perform(get("/assets/index-abc.js")).andExpect(forwardedUrl(null));
+        mvc.perform(get("/api/v1/unknown")).andExpect(status().isUnauthorized());
     }
 }

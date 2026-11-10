@@ -1,0 +1,21 @@
+# Development / local PostgreSQL. Bound to loopback only. Data persists in the named volume.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: c2c-agent-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: c2c_agent
+      POSTGRES_USER: ${C2C_DB_USER:-c2c}
+      POSTGRES_PASSWORD: ${C2C_DB_PASSWORD:?Set C2C_DB_PASSWORD in .env (run scripts/setup.ps1)}
+    ports:
+      - "127.0.0.1:${C2C_DB_PORT:-5432}:5432"
+    volumes:
+      - c2c_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${C2C_DB_USER:-c2c} -d c2c_agent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+volumes:
+  c2c_pgdata:
