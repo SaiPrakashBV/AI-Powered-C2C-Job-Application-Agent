@@ -60,11 +60,13 @@ public abstract class IntegrationTestBase {
         String dataDir = Files.createTempDirectory("c2c-test-data").toString();
         registry.add("app.data-dir", () -> dataDir);
         registry.add("app.jobs.worker-enabled", () -> "false"); // tests drive the worker explicitly
+        registry.add("app.gmail.scheduler-enabled", () -> "false");
     }
 
     @BeforeEach
     void cleanDatabase() {
-        jdbc.execute("TRUNCATE background_job, audit_event, workspace_settings, app_user, workspace CASCADE");
+        jdbc.execute("TRUNCATE email_attachment, incoming_email, email_source_rule, gmail_sync_checkpoint, gmail_account, "
+                + "background_job, audit_event, workspace_settings, app_user, workspace CASCADE");
     }
 
     protected AppUser createOwner(String username) {

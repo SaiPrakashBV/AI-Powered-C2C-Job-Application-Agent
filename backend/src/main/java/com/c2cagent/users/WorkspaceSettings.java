@@ -34,6 +34,10 @@ public class WorkspaceSettings {
     private boolean externalAiConsent;
     @Column(nullable = false, length = 10)
     private String theme = "system";
+    @Column(name = "source_discovery_mode", nullable = false)
+    private boolean sourceDiscoveryMode;
+    @Column(name = "gmail_backfill_days", nullable = false)
+    private int gmailBackfillDays = 14;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -62,6 +66,10 @@ public class WorkspaceSettings {
     public void setExternalAiConsent(boolean externalAiConsent) { this.externalAiConsent = externalAiConsent; }
     public String getTheme() { return theme; }
     public void setTheme(String theme) { this.theme = theme; }
+    public boolean isSourceDiscoveryMode() { return sourceDiscoveryMode; }
+    public void setSourceDiscoveryMode(boolean v) { this.sourceDiscoveryMode = v; }
+    public int getGmailBackfillDays() { return gmailBackfillDays; }
+    public void setGmailBackfillDays(int v) { this.gmailBackfillDays = v; }
     public Instant getUpdatedAt() { return updatedAt; }
     public Long getVersion() { return version; }
 }

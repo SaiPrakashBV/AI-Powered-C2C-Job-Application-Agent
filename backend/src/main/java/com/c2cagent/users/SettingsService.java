@@ -36,6 +36,12 @@ public class SettingsService {
         }
         s.setExternalAiConsent(req.externalAiConsent());
         s.setTheme(req.theme());
+        if (req.sourceDiscoveryMode() != null) {
+            s.setSourceDiscoveryMode(req.sourceDiscoveryMode());
+        }
+        if (req.gmailBackfillDays() != null) {
+            s.setGmailBackfillDays(req.gmailBackfillDays());
+        }
         audit.recordUser(user, "SETTINGS_UPDATED", "workspace_settings", user.workspaceId().toString(),
                 "General settings updated", Map.of("sessionTimeoutMinutes", req.sessionTimeoutMinutes(),
                         "gmailPollingIntervalMinutes", req.gmailPollingIntervalMinutes(), "theme", req.theme()));

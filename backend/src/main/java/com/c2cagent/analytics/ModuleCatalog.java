@@ -9,16 +9,16 @@ import java.util.List;
 public final class ModuleCatalog {
     private ModuleCatalog() {}
 
-    public enum Availability { AVAILABLE, PLANNED }
+    public enum Availability { AVAILABLE, PARTIAL, PLANNED }
 
     public record ModuleInfo(String key, String name, int phase, Availability availability) {}
 
     public static final List<ModuleInfo> MODULES = List.of(
             new ModuleInfo("dashboard", "Main Dashboard", 1, Availability.AVAILABLE),
             new ModuleInfo("settings", "Settings, Backups & Diagnostics", 1, Availability.AVAILABLE),
-            new ModuleInfo("gmail", "Gmail Accounts", 2, Availability.PLANNED),
-            new ModuleInfo("source-rules", "Email Source & Vendor Rules", 2, Availability.PLANNED),
-            new ModuleInfo("inbox", "Inbox / Classification Review", 3, Availability.PLANNED),
+            new ModuleInfo("gmail", "Gmail Accounts", 2, Availability.AVAILABLE),
+            new ModuleInfo("source-rules", "Email Source & Vendor Rules", 2, Availability.AVAILABLE),
+            new ModuleInfo("inbox", "Inbox / Classification Review", 3, Availability.PARTIAL),
             new ModuleInfo("jobs", "Extracted Job Details", 3, Availability.PLANNED),
             new ModuleInfo("profiles", "Job Search Profiles", 4, Availability.PLANNED),
             new ModuleInfo("resumes", "Resume Library", 5, Availability.PLANNED),

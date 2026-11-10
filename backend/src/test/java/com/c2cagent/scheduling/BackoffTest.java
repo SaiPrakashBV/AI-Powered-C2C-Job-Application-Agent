@@ -14,7 +14,8 @@ class BackoffTest {
     @Test
     void backoffGrowsExponentiallyAndIsBounded() {
         var props = new AppProperties(Path.of("."), false, new AppProperties.Security(5, Duration.ofMinutes(15), 12),
-                new AppProperties.Jobs(true, 5, Duration.ofSeconds(10), Duration.ofMinutes(5), Duration.ofMinutes(30)));
+                new AppProperties.Jobs(true, 5, Duration.ofSeconds(10), Duration.ofMinutes(5), Duration.ofMinutes(30)),
+                new AppProperties.Email(10_000_000, 500_000, 200, 8, 5000));
         var service = new BackgroundJobService(mock(BackgroundJobRepository.class), mock(JdbcTemplate.class), props,
                 Optional.empty());
         assertThat(service.backoff(1)).isEqualTo(Duration.ofSeconds(10));
