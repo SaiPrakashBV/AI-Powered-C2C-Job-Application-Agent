@@ -1,0 +1,75 @@
+# Install-time configuration. Override with environment variables (see ../.env.example) or
+# an application-local.yml next to the jar. Business preferences are stored in the database.
+spring:
+  application:
+    name: c2c-agent
+  datasource:
+    url: ${C2C_DB_URL:jdbc:postgresql://localhost:5432/c2c_agent}
+    username: ${C2C_DB_USER:c2c}
+    password: ${C2C_DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate          # schema is owned by Flyway; Hibernate only validates it
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 20MB
+  config:
+    import: optional:file:./application-local.yml
+
+server:
+  address: ${C2C_BIND_ADDRESS:127.0.0.1}   # loopback only by default
+  port: ${C2C_PORT:8080}
+  shutdown: graceful
+  servlet:
+    session:
+      timeout: 60m
+      cookie:
+        http-only: true
+        same-site: strict
+        name: C2CSESSION
+  error:
+    include-message: never
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  data-dir: ${C2C_DATA_DIR:${user.home}/C2CAgent/data}
+  demo-mode: ${C2C_DEMO_MODE:false}
+  security:
+    max-failed-logins: 5
+    lockout-duration: PT15M
+    min-password-length: 12
+  jobs:
+    worker-enabled: true
+    batch-size: 5
+    poll-interval: PT5S
+    base-backoff: PT10S
+    max-backoff: PT30M
+    stale-lock-timeout: PT30M
+
+logging:
+  file:
+    name: ${app.data-dir}/logs/c2c-agent.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 14
